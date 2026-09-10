@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const mongoose = require('../backend/node_modules/mongoose');
 const cors = require('cors');
 
 mongoose.set('bufferCommands', false);
