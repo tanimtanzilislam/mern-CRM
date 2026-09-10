@@ -25,7 +25,8 @@ export default function App() {
       setCustomers(res.data);
       setError('');
     } catch (err) {
-      setError('Could not load customers. Is the backend running?');
+      const message = err.response?.data?.message;
+      setError(message ? `Could not load customers: ${message}` : 'Could not load customers. Is the backend running?');
     } finally {
       setLoading(false);
     }
