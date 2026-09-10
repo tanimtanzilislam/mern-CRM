@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+mongoose.set('bufferCommands', false);
+
 const customerRoutes = require('../backend/routes/customers');
 
 const app = express();
@@ -24,7 +26,10 @@ async function connectToDatabase() {
 
   if (mongoose.connection.readyState === 1) return;
   if (!connectionPromise) {
-    connectionPromise = mongoose.connect(mongoUri).catch((error) => {
+    connectionPromise = mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 8000,
+      connectTimeoutMS: 8000,
+    }).catch((error) => {
       connectionPromise = undefined;
       throw error;
     });
@@ -44,8 +49,6 @@ module.exports = async (req, res) => {
     if (error.message === 'MONGODB_URI is missing or contains placeholders.') {
       return res.status(500).json({ message: error.message });
     }
-    return res.status(503).json({
-      message: 'MongoDB connection failed. Check the Atlas URI, database user, password, and Network Access allowlist.',
-    });
+    return res.status(503).json({ message: `MongoDB connection failed: ${error.message}` });
   }
 };
