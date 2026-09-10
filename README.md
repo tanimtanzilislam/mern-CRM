@@ -73,6 +73,18 @@ then redeploy. In MongoDB Atlas, add `0.0.0.0/0` under **Network Access** for
 development deployments and URL-encode special characters in the database
 password.
 
+Set `JWT_SECRET` to a different long random value in both local `.env` and
+Vercel Production environment variables.
+
+### Authentication and roles
+
+The first account is created with `POST /api/auth/register` and becomes an
+admin. After that, only an admin can create users through the User Management
+section or `POST /api/auth/users`. Sign in at the CRM screen to receive a
+token. The roles are `admin`, `sales_manager`, and `staff`; API permissions
+are enforced with `401` for missing/invalid tokens and `403` for insufficient
+roles.
+
 Test it: open http://localhost:5000 in your browser — you should see "MERN CRM API is running".
 
 ## 3. Run the frontend

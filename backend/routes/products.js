@@ -1,9 +1,10 @@
 const express = require('express');
 const Product = require('../models/Product');
+const { requireAuth, requireRoles } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', requireAuth, async (req, res) => {
   try {
     res.json(await Product.find().sort({ createdAt: -1 }));
   } catch (err) {
@@ -11,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, requireRoles('admin'), async (req, res) => {
   try {
     res.status(201).json(await Product.create(req.body));
   } catch (err) {
@@ -19,7 +20,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAuth, requireRoles('admin'), async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -32,7 +33,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, requireRoles('admin'), async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ message: 'Product not found' });

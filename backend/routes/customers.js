@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Customer = require('../models/Customer');
+const { requireAuth, requireRoles } = require('../middleware/auth');
 
 // GET /api/customers - list all customers (newest first)
-router.get('/', async (req, res) => {
+router.get('/', requireAuth, async (req, res) => {
   try {
     const customers = await Customer.find().sort({ createdAt: -1 });
     res.json(customers);
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/customers/:id - get single customer
-router.get('/:id', async (req, res) => {
+router.get('/:id', requireAuth, async (req, res) => {
   try {
     const customer = await Customer.findById(req.params.id);
     if (!customer) return res.status(404).json({ message: 'Customer not found' });
@@ -24,7 +25,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/customers - create customer
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req, res) => {
   try {
     const customer = new Customer(req.body);
     const saved = await customer.save();
@@ -35,7 +36,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/customers/:id - update customer
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAuth, async (req, res) => {
   try {
     const updated = await Customer.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -49,7 +50,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE /api/customers/:id - delete customer
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, requireRoles('admin'), async (req, res) => {
   try {
     const deleted = await Customer.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ message: 'Customer not found' });

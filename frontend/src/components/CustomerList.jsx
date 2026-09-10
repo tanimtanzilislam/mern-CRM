@@ -1,4 +1,4 @@
-export default function CustomerList({ customers, onEdit, onDelete, hasSearch }) {
+export default function CustomerList({ customers, onEdit, onDelete, hasSearch, canEdit = true, canDelete = true }) {
   if (!customers.length) {
     return <div className="empty-state"><span>⌁</span><strong>{hasSearch ? 'No matches found' : 'Your directory is empty'}</strong><p>{hasSearch ? 'Try a different search term.' : 'Add your first customer to get started.'}</p></div>;
   }
@@ -26,10 +26,10 @@ export default function CustomerList({ customers, onEdit, onDelete, hasSearch })
               <span className={`badge badge-${c.status}`}>{c.status}</span>
             </td>
             <td className="actions">
-              <button className="table-action" onClick={() => onEdit(c)} aria-label={`Edit ${c.name}`}>Edit</button>
-              <button className="table-action danger" onClick={() => onDelete(c._id)} aria-label={`Delete ${c.name}`}>
+              {canEdit && <button className="table-action" onClick={() => onEdit(c)} aria-label={`Edit ${c.name}`}>Edit</button>}
+              {canDelete && <button className="table-action danger" onClick={() => onDelete(c._id)} aria-label={`Delete ${c.name}`}>
                 Delete
-              </button>
+              </button>}
             </td>
           </tr>
         ))}
