@@ -5,12 +5,14 @@ const cors = require('cors');
 mongoose.set('bufferCommands', false);
 
 const customerRoutes = require('../backend/routes/customers');
+const productRoutes = require('../backend/routes/products');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use('/customers', customerRoutes);
+app.use('/products', productRoutes);
 
 app.get('/', (req, res) => {
   res.send('MERN CRM API is running');
