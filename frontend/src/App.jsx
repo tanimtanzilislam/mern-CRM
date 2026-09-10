@@ -19,6 +19,9 @@ export default function App() {
     try {
       setLoading(true);
       const res = await getCustomers();
+      if (!Array.isArray(res.data)) {
+        throw new Error('Unexpected customer response');
+      }
       setCustomers(res.data);
       setError('');
     } catch (err) {

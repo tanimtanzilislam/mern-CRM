@@ -35,6 +35,9 @@ async function connectToDatabase() {
 module.exports = async (req, res) => {
   try {
     await connectToDatabase();
+    if (req.url.startsWith('/api')) {
+      req.url = req.url.slice(4) || '/';
+    }
     return app(req, res);
   } catch (error) {
     console.error('MongoDB connection error:', error.message);
