@@ -41,6 +41,11 @@ module.exports = async (req, res) => {
     return app(req, res);
   } catch (error) {
     console.error('MongoDB connection error:', error.message);
-    return res.status(500).json({ message: 'Database connection failed' });
+    if (error.message === 'MONGODB_URI is missing or contains placeholders.') {
+      return res.status(500).json({ message: error.message });
+    }
+    return res.status(503).json({
+      message: 'MongoDB connection failed. Check the Atlas URI, database user, password, and Network Access allowlist.',
+    });
   }
 };

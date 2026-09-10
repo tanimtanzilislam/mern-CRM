@@ -67,6 +67,12 @@ Connected to MongoDB
 Server running on port 5000
 ```
 
+For the Vercel deployment, add `MONGODB_URI` in the Vercel project settings
+under **Settings > Environment Variables** for the **Production** environment,
+then redeploy. In MongoDB Atlas, add `0.0.0.0/0` under **Network Access** for
+development deployments and URL-encode special characters in the database
+password.
+
 Test it: open http://localhost:5000 in your browser — you should see "MERN CRM API is running".
 
 ## 3. Run the frontend
